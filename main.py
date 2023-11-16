@@ -19,7 +19,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ["FLASK_KEY"]
 Bootstrap5(app)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///blog.db"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///blog.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///blog.db")
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -293,4 +294,4 @@ def send_email(name, email, phone, message):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
