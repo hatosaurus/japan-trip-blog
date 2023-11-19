@@ -14,6 +14,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
+# for new email stuff via Twilio
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+# other new stuff for testing
+from email.message import EmailMessage
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ["FLASK_KEY"]
@@ -286,11 +291,25 @@ def contact():
 
 
 def send_email(name, email, phone, message):
-    email_message = f"Subject:Japan Trip: New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
-    with smtplib.SMTP("smtp.gmail.com") as connection:
-        connection.starttls()
-        connection.login(MY_EMAIL, MY_EMAIL_PASSWORD)
-        connection.sendmail(MY_EMAIL, TARGET_EMAIL, email_message)
+    # email_message = f"Subject:Japan Trip: New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+    # with smtplib.SMTP("smtp.gmail.com") as connection:
+    #     connection.starttls()
+    #     connection.login(MY_EMAIL, MY_EMAIL_PASSWORD)
+    #     connection.sendmail(MY_EMAIL, TARGET_EMAIL, email_message)
+    smtp_server = 'mail.privateemail.com'
+    port = 465
+    login = MY_EMAIL
+    password = MY_EMAIL_PASSWORD
+    email_message = EmailMessage()
+    email_message["Subject"] = "New Message Received"
+    email_message["From"] = MY_EMAIL
+    email_message["To"] = TARGET_EMAIL
+    content = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+    email_message.set_content(content)
+    server = smtplib.SMTP_SSL(smtp_server, port)
+    server.login(login, password)
+    server.send_message(email_message)
+    server.quit()
 
 
 if __name__ == "__main__":
