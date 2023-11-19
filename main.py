@@ -14,10 +14,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
-# for new email stuff via Twilio
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-# other new stuff for testing
 from email.message import EmailMessage
 
 app = Flask(__name__)
